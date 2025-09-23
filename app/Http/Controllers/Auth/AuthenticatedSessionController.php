@@ -28,7 +28,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = Auth::user();
+
+        // 🔹 Kalau role pengelola / dosen → masuk ke Filament (/admin)
+        if ($user->role === 'pengelola' || $user->role === 'dosen') {
+            return redirect()->intended('/admin');
+        }
+
+        // 🔹 Default: ibu_hamil → dashboard user biasa
+        return redirect()->intended('/dashboard');
     }
 
     /**
