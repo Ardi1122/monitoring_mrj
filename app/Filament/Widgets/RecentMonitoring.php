@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Monitoring;
+use Dom\Text;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Filament\Tables\Columns\TextColumn;
 // BadgeColumn sudah deprecated, hapus import ini
@@ -37,24 +38,18 @@ class RecentMonitoring extends BaseWidget
             TextColumn::make('hb')
                 ->label('Hb'),
 
-            TextColumn::make('tekanan_darah')
-                ->label('Tekanan Darah'),
+            TextColumn::make('tekanan_darah_sistolik')
+                ->label('TD Sistolik (mmHg)'),
+            
+            TextColumn::make('tekanan_darah_diastolik')
+                ->label('TD Diastolik (mmHg)'),
 
             // PERBAIKAN 2: Gunakan TextColumn dengan badge
             TextColumn::make('risk')
                 ->label('Risiko')
                 ->getStateUsing(function (Monitoring $record) {
-                    // Perbaikan parsing tekanan_darah yang lebih aman
-                    $sistolik = 0;
-                    $diastolik = 0;
-                    
-                    if ($record->tekanan_darah) {
-                        $parts = explode('/', $record->tekanan_darah);
-                        if (count($parts) >= 2) {
-                            $sistolik = (int) trim($parts[0]);
-                            $diastolik = (int) trim($parts[1]);
-                        }
-                    }
+                        $sistolik  = $record->tekanan_darah_sistolik ?? 0;
+                        $diastolik = $record->tekanan_darah_diastolik ?? 0;
 
                     if ($record->tinggi_badan < 145 || $record->hb < 11 || $sistolik >= 140 || $diastolik >= 90) {
                         return 'Tinggi';

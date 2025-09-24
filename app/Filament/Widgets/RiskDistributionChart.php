@@ -18,8 +18,8 @@ class RiskDistributionChart extends ChartWidget
         $risiko = Monitoring::where(function ($q) {
             $q->where('tinggi_badan', '<', 145)
               ->orWhere('hb', '<', 11)
-              ->orWhere('tekanan_darah', '>=', 140)
-              ->orWhere('tekanan_darah', '>=', 90)
+              ->orWhere('tekanan_darah_sistolik', '>=', 140)
+            ->orWhere('tekanan_darah_diastolik', '>=', 90)           
               ->orWhere('paritas', '>=', 4);
         })->count();
 

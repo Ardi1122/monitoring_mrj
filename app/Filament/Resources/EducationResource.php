@@ -19,14 +19,26 @@ class EducationResource extends Resource
     protected static ?string $model = Education::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static ?string $navigationGroup = 'Konten Edukasi';
     
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
+                Forms\Components\FileUpload::make('thumbnail_url')
+                    ->image()
+                    ->directory('education_thumbnails')
+                    ->disk('public')
                     ->columnSpan(2)
+                    ->required(),
+                Forms\Components\TextInput::make('title')
+                    ->required()
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        $set('slug', Str::slug($state));
+                    }),
+                    Forms\Components\TextInput::make('slug')
                     ->required(),
                 Forms\Components\Select::make('type')
                 ->options([
@@ -36,10 +48,14 @@ class EducationResource extends Resource
                 ])
                 ->required(),
                 Forms\Components\TextInput::make('content_url')
+                    ->label('Link Konten')
                     ->required(),
                 Forms\Components\RichEditor::make('description')
                     ->columnSpan(2)
                     ->required(),
+                Forms\Components\Toggle::make('is_popular')
+                ->label('Tandai Populer')
+                ->default(false),
             ]);
     }
 
@@ -47,9 +63,15 @@ class EducationResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('thumbnail_url')
+                    ->label('Thumbnail')
+                    ->disk('public')
+                    ->square(),
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('description')
+                Tables\Columns\TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->label('Dibuat'),
+                Tables\Columns\IconColumn::make('is_popular')->boolean()->label('Populer?'),
             ])
             ->filters([
                 //

@@ -45,9 +45,14 @@ class MonitoringResource extends Resource
                 ->numeric()
                 ->label('Tinggi Badan (cm)'),
 
-            Forms\Components\TextInput::make('tekanan_darah')
-                ->label('Tekanan Darah (mmHg)')
-                ->placeholder('120/80'),
+            Forms\Components\TextInput::make('tekanan_darah_sistolik')
+                ->numeric()
+                ->label('Tekanan Darah Sistolik (mmHg)')
+                ->required(),
+            Forms\Components\TextInput::make('tekanan_darah_diastolik')
+                ->numeric()
+                ->label('Tekanan Darah Diastolik (mmHg)')
+                ->required(),
 
             Forms\Components\TextInput::make('nadi')
                 ->numeric()
@@ -61,6 +66,8 @@ class MonitoringResource extends Resource
                 ->label('Paritas')
                 ->placeholder('G2P1A0'),
             Forms\Components\Toggle::make('konsumsi_mrj')->label('Konsumsi MRJ'),
+            Forms\Components\Toggle::make('konsumsi_mrj')->label('Konsumsi Jely'),
+
         ]);
     }
 
@@ -96,8 +103,10 @@ class MonitoringResource extends Resource
                 Tables\Columns\TextColumn::make('tinggi_badan')
                     ->label('TB (cm)'),
 
-                Tables\Columns\TextColumn::make('tekanan_darah')
-                    ->label('Tekanan Darah'),
+                Tables\Columns\TextColumn::make('tekanan_darah_sistolik')
+                    ->label('TD Sistolik (mmHg)'),
+                Tables\Columns\TextColumn::make('tekanan_darah_diastolik')
+                    ->label('TD Diastolik (mmHg)'),
 
                 Tables\Columns\TextColumn::make('nadi')
                     ->label('Nadi (/menit)'),
@@ -114,6 +123,10 @@ class MonitoringResource extends Resource
                 Tables\Columns\IconColumn::make('konsumsi_mrj')
                     ->boolean()
                     ->label('MRJ?'),
+
+                Tables\Columns\IconColumn::make('konsumsi_jely')
+                    ->boolean()
+                    ->label('Jely?'),
             ])
             ->filters([
                 Tables\Filters\Filter::make('tanggal')

@@ -37,8 +37,8 @@ class StatsOverview extends BaseWidget
             Stat::make('Kasus Risiko', Monitoring::where(function ($query) {
                 $query->where('tinggi_badan', '<', 145)
                       ->orWhere('hb', '<', 11)
-                      ->orWhere('tekanan_darah', '>=', 140)
-                      ->orWhere('tekanan_darah', '>=', 90);
+                      ->orWhere('tekanan_darah_sistolik', '>=', 140)
+                      ->orWhere('tekanan_darah_diastolik', '>=', 90);
             })->count())
                 ->color('danger')
                 ->icon('heroicon-o-exclamation-triangle')

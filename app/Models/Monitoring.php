@@ -17,12 +17,14 @@ class Monitoring extends Model
         'lila',
         'berat_badan',
         'tinggi_badan',
-        'tekanan_darah',
+        'tekanan_darah_sistolik',
+        'tekanan_darah_diastolik',
         'nadi',
         'respirasi',
         'paritas',
         'hb',
         'konsumsi_mrj',
+        'konsumsi_jely',
     ];
 
 

@@ -17,11 +17,6 @@ class Logbook extends Model
         'topik',
         'hasil_diskusi',
         'tindak_lanjut',
-        'checklist_perilaku',
-    ];
-
-     protected $casts = [
-        'checklist_perilaku' => 'array', // <== penting!
     ];
 
     public function pengelola()

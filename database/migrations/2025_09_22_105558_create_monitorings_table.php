@@ -20,12 +20,14 @@ return new class extends Migration
             $table->decimal('lila', 5, 2);     // cm
             $table->decimal('berat_badan', 5, 2); // kg
             $table->decimal('tinggi_badan', 5, 2)->nullable(); // cm
-            $table->string('tekanan_darah')->nullable(); // contoh "120/80"
+            $table->integer('tekanan_darah_sistolik')->nullable();  // mmHg
+        $table->integer('tekanan_darah_diastolik')->nullable(); // mmHg
             $table->integer('nadi')->nullable(); // x/menit
             $table->integer('respirasi')->nullable(); // x/menit
             $table->string('paritas')->nullable(); // misal "G2P1A0"
             $table->decimal('hb', 5, 2);       // g/dL
             $table->boolean('konsumsi_mrj')->default(false);
+            $table->boolean('konsumsi_jely')->default(false);
             $table->timestamps();
         });
     }

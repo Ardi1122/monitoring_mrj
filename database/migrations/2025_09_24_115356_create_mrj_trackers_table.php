@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logbooks', function (Blueprint $table) {
+        Schema::create('mrj_trackers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pengelola_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('ibu_hamil_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('kader_id')->constrained('users')->onDelete('cascade'); // user role = pengelola/kader
             $table->date('tanggal');
-            $table->string('topik');
-            $table->text('hasil_diskusi')->nullable();
-            $table->text('tindak_lanjut')->nullable();
+            $table->integer('jumlah_produksi')->default(0);
+            $table->integer('jumlah_distribusi')->default(0);
+            $table->integer('stok_sisa')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logbooks');
+        Schema::dropIfExists('mrj_trackers');
     }
 };

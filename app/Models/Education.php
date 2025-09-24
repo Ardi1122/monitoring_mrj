@@ -10,9 +10,13 @@ class Education extends Model
     use HasFactory;
 
     protected $fillable = [
+        'thumbnail_url',
         'title',
+        'slug',
         'type',
         'content_url',
         'description',
+        'views',
+        'is_popular',
     ];
 }
