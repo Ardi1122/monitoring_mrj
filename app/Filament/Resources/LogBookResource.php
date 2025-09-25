@@ -17,7 +17,8 @@ class LogBookResource extends Resource
 {
     protected static ?string $model = LogBook::class;
     protected static ?string $navigationIcon = 'heroicon-o-heart';
-    protected static ?string $navigationGroup = 'Monitoring';
+    protected static ?string $navigationGroup = 'Manajemen';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {

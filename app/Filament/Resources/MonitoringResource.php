@@ -17,7 +17,8 @@ class MonitoringResource extends Resource
 {
     protected static ?string $model = Monitoring::class;
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
-    protected static ?string $navigationGroup = 'Monitoring';
+    protected static ?string $navigationGroup = 'Kesehatan';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -66,7 +67,7 @@ class MonitoringResource extends Resource
                 ->label('Paritas')
                 ->placeholder('G2P1A0'),
             Forms\Components\Toggle::make('konsumsi_mrj')->label('Konsumsi MRJ'),
-            Forms\Components\Toggle::make('konsumsi_mrj')->label('Konsumsi Jely'),
+            Forms\Components\Toggle::make('konsumsi_jely')->label('Konsumsi Jely'),
 
         ]);
     }

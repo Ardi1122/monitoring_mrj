@@ -17,7 +17,8 @@ class MrjTrackerResource extends Resource
 {
     protected static ?string $model = MrjTracker::class;
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
-    protected static ?string $navigationGroup = 'Manajemen MRJ';
+    protected static ?string $navigationGroup = 'Kesehatan';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {

@@ -18,7 +18,8 @@ class ReminderResource extends Resource
 {
     protected static ?string $model = Reminder::class;
     protected static ?string $navigationIcon = 'heroicon-o-bell';
-    protected static ?string $navigationGroup = 'Manajemen Ibu Hamil';
+    Protected static ?string $navigationGroup = 'Manajemen';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
