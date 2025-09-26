@@ -39,12 +39,21 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'ibu_hamil',
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        switch ($user->role) {
+        case 'dosen':
+            return redirect('/admin');
+        case 'pengelola':
+            return redirect('/kader');
+        case 'ibu_hamil':
+        default:
+            return redirect('/ibu-hamil/dashboard');
+    }
     }
 }

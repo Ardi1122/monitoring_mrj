@@ -22,4 +22,9 @@ class MrjTracker extends Model
     {
         return $this->belongsTo(User::class, 'kader_id');
     }
+
+    public function konsumsiIbuHamil()
+    {
+        return $this->hasMany(IbuHamilMrjTracker::class, 'mrj_tracker_id');
+    }
 }

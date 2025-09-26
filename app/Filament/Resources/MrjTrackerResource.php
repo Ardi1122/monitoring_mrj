@@ -25,7 +25,7 @@ class MrjTrackerResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('kader_id')
-                ->relationship('pengelola', 'name')
+                ->relationship('kader', 'name')
                 ->label('Kader')
                 ->required(),
 

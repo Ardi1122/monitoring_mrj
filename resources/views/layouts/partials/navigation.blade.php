@@ -42,29 +42,38 @@
                         <i class="fa-regular fa-file-alt me-1"></i> Log
                     </a>
                 </li>
-                <li class="nav-item px-3">
-                    <a class="nav-link {{ request()->routeIs('ibu_hamil.profile') ? 'active' : '' }}"
-                        href="{{ route('ibu_hamil.profile') }}">
-                        <i class="fa-regular fa-user me-1"></i> Profil
-
+                <li class="nav-item dropdown px-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-regular fa-user me-1"></i> {{ Auth::user()->name }}
                     </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li class="dropdown-item-text">
+                            <div>{{ Auth::user()->name }}</div>
+                            <div class="small text-muted">{{ Auth::user()->email }}</div>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('profile.edit') }}">Edit Profile</a>
+                        </li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item">Log Out</button>
+                            </form>
+                        </li>
+                    </ul>
                 </li>
-                <li>
-                  <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <x-responsive-nav-link class="nav-link" :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                  </form>
-                </li>
+
             </ul>
         </div>
     </div>
 </nav>
 
 {{-- Mobile Bottom Navbar --}}
+
 <nav class="navbar fixed-bottom navbar-light bg-white border-top d-md-none">
     <div class="container d-flex justify-content-around py-1">
         <a class="text-center nav-link {{ request()->routeIs('ibu_hamil.dashboard') ? 'text-pink' : 'text-muted' }}"
@@ -87,9 +96,37 @@
             href="{{ route('ibu_hamil.log') }}">
             <i class="fas fa-file-alt"></i><br><small>Log</small>
         </a>
-        <a class="text-center nav-link {{ request()->routeIs('ibu_hamil.profile') ? 'text-pink' : 'text-muted' }}"
-            href="{{ route('ibu_hamil.profile') }}">
-            <i class="fas fa-user"></i><br><small>Profil</small>
+
+        {{-- Profile icon --}}
+        <a href="#" class="text-center nav-link text-muted" data-bs-toggle="modal" data-bs-target="#profileModal">
+            <i class="fas fa-user"></i><br><small>Profile</small>
         </a>
     </div>
 </nav>
+
+{{-- Modal Profile --}}
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileModalLabel">Profil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="mb-2">
+                    <strong>{{ Auth::user()->name }}</strong>
+                </div>
+                <div class="mb-3 text-muted small">{{ Auth::user()->email }}</div>
+                <div class="d-grid gap-2">
+                    <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-sm">Edit Profile</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Log Out</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

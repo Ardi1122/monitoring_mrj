@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EducationController;
+use App\Http\Controllers\MonitoringController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -17,17 +19,20 @@ Route::prefix('ibu-hamil')
     ->middleware(['auth', 'verified'])
     ->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('ibu_hamil.dashboard');
-        })->name('dashboard');
-
-        Route::get('/education', function () {
-            return view('ibu_hamil.education');
-        })->name('education');
+        Route::get('/dashboard', [MonitoringController::class, 'index'])->name('dashboard');
+        Route::get('/education', [EducationController::class, 'index'])->name('education');
 
         Route::get('/monitoring', function () {
             return view('ibu_hamil.monitoring');
         })->name('monitoring');
+
+        
+        Route::post('/monitoring', [MonitoringController::class, 'store'])->name('monitoring.store');
+        Route::get('/monitoring/{monitoring}/edit', [MonitoringController::class, 'edit'])->name('monitoring.edit');
+        Route::put('/monitoring/{monitoring}', [MonitoringController::class, 'update'])->name('monitoring.update');
+        Route::delete('/monitoring/{monitoring}', [MonitoringController::class, 'destroy'])->name('monitoring.destroy');
+
+        Route::post('/mrj-tracker', [MonitoringController::class, 'storeMRJ'])->name('mrj.store');
 
         Route::get('/mrj-tracker', function () {
             return view('ibu_hamil.mrj');
@@ -46,5 +51,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
-
+require __DIR__ . '/auth.php';
