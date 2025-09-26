@@ -20,7 +20,7 @@ class Admin
             if(Auth::check() && Auth::user()->role === 'pengelola') {
                 return redirect('/kader');
             }
-            return redirect('/dashboard'); 
+            return redirect('/'); 
         }
         return $next($request);
     }

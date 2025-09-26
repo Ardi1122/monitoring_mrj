@@ -1,0 +1,22 @@
+
+* {
+    font-family: "Quicksand", sans-serif;
+}
+
+.nav-link.active,
+.text-pink {
+  background-color: #fce7f3 !important; /* pink lembut */
+  color: #db2777 !important; /* pink tua */
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.nav-link {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Hover efek */
+.nav-link:hover {
+  color: #db2777 !important;
+}

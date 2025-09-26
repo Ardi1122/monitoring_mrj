@@ -156,7 +156,7 @@
             @if (Route::has('login'))
                 <div class="navbar-nav ms-auto">
                     @auth
-                        <a class="nav-link text-white" href="{{ url('/dashboard') }}" style="transition: all 0.3s;">
+                        <a class="nav-link text-white" href="{{ url('/ibu-hamil/dashboard') }}" style="transition: all 0.3s;">
                             <i class="fas fa-tachometer-alt me-1"></i>
                             Dashboard
                         </a>

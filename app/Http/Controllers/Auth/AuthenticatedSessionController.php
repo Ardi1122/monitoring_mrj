@@ -39,7 +39,7 @@ class AuthenticatedSessionController extends Controller
 
         case 'ibu_hamil':
         default:
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/ibu-hamil/dashboard');
     }
     }
 

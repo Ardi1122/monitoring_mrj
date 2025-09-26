@@ -17,7 +17,7 @@ class RedirectIfIbuHamil
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check() && Auth::user()->role === 'ibu_hamil' && $request->is('admin*')) {
-            return redirect('/dashboard');
+            return redirect('/');
         }
 
         return $next($request);

@@ -63,7 +63,7 @@
             @if (Route::has('login'))
                 <div class="auth-buttons d-flex align-items-center">
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="btn btn-accent">
+                        <a href="{{ url('/ibu-hamil/dashboard') }}" class="btn btn-accent">
                             <i class="fas fa-tachometer-alt me-1"></i> Dashboard
                         </a>
                     @else
