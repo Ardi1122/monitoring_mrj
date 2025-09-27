@@ -21,10 +21,7 @@ Route::prefix('ibu-hamil')
 
         Route::get('/dashboard', [MonitoringController::class, 'index'])->name('dashboard');
         Route::get('/education', [EducationController::class, 'index'])->name('education');
-
-        Route::get('/monitoring', function () {
-            return view('ibu_hamil.monitoring');
-        })->name('monitoring');
+        Route::get('/monitoring', [MonitoringController::class, 'monitoring'])->name('monitoring');
 
         
         Route::post('/monitoring', [MonitoringController::class, 'store'])->name('monitoring.store');

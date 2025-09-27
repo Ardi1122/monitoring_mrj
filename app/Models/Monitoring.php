@@ -27,6 +27,10 @@ class Monitoring extends Model
         'konsumsi_jely',
     ];
 
+    protected $casts = [
+        'tanggal' => 'date',
+    ];
+
 
     public function pengelola()
     {

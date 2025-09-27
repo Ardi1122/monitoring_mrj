@@ -202,7 +202,7 @@
     </div>
 
     <!-- Modal untuk Input MRJ -->
-    <div class="modal fade" id="mrjModal" tabindex="-1" aria-labelledby="mrjModalLabel" aria-hidden="true">
+ <div class="modal fade" id="mrjModal" tabindex="-1" aria-labelledby="mrjModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-purple text-white">
@@ -223,7 +223,10 @@
                         <div class="mb-3">
                             <label for="konsumsi_harian" class="form-label">Jumlah Dikonsumsi</label>
                             <input type="number" class="form-control" name="konsumsi_harian" id="konsumsi_harian"
-                                min="1" max="2" required>
+                                min="1" max="{{ $stokKader->stok_sisa ?? 2 }}" required>
+                            <small class="text-muted">
+                                Stok tersisa: {{ $stokKader->stok_sisa ?? 0 }} sachet
+                            </small>
                         </div>
 
                         <button type="submit" class="btn btn-purple w-100">Simpan</button>

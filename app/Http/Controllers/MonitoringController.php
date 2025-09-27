@@ -22,9 +22,67 @@ class MonitoringController extends Controller
 
         $status = $monitoring ? $this->getStatusKehamilan($monitoring) : null;
         $badgeColor = $status ? $this->getBadgeColor($status) : 'primary';
+        $stokKader = MrjTracker::first();
 
-        return view('ibu_hamil.dashboard', compact('user', 'monitoring', 'status', 'badgeColor'));
+        return view('ibu_hamil.dashboard', compact('user', 'monitoring', 'status', 'badgeColor', 'stokKader'));
     }
+
+    public function monitoring()
+    {
+        $user = Auth::user();
+
+        $monitorings = Monitoring::where('ibu_hamil_id', $user->id)
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
+        $latest = $monitorings->last();
+        $status = $latest ? $this->getStatusKehamilan($latest) : null;
+        $badgeColor = $status ? $this->getBadgeColor($status) : 'primary';
+
+        $maxWeight = $monitorings->max('berat_badan') ?: 1; // supaya nggak bagi 0
+        $maxLila = $monitorings->max('lila') ?: 1;
+        $maxHb = $monitorings->max('hb') ?: 1;
+
+        $weightData = $monitorings->map(function ($row) use ($maxWeight) {
+            return [
+                'week' => $row->usia_kehamilan . 'w',
+                'value' => $row->berat_badan,
+                'percentage' => ($row->berat_badan / $maxWeight) * 100,
+                'date' => \Carbon\Carbon::parse($row->date)->format('d/m/Y'),
+            ];
+        });
+
+        $lilaData = $monitorings->map(function ($row) use ($maxLila) {
+            return [
+                'week' => $row->usia_kehamilan . 'w',
+                'value' => $row->lila,
+                'percentage' => ($row->lila / $maxLila) * 100,
+                'date' => \Carbon\Carbon::parse($row->date)->format('d/m/Y'),
+            ];
+        });
+
+        $hbData = $monitorings->map(function ($row) use ($maxHb) {
+            return [
+                'week' => $row->usia_kehamilan . 'w',
+                'value' => $row->hb,
+                'percentage' => ($row->hb / $maxHb) * 100,
+                'date' => \Carbon\Carbon::parse($row->tanggal)->format('d/m/Y'),
+            ];
+        });
+
+
+        return view('ibu_hamil.monitoring', compact(
+            'user',
+            'monitorings',
+            'latest',
+            'status',
+            'badgeColor',
+            'weightData',
+            'lilaData',
+            'hbData'
+        ));
+    }
+
 
     // Tambah data baru
     public function store(Request $request)
@@ -104,27 +162,29 @@ class MonitoringController extends Controller
         return redirect()->route('ibu_hamil.dashboard')->with('success', 'Data monitoring berhasil dihapus');
     }
 
-    private function getStatusKehamilan($record)
+    public function getStatusKehamilan($record)
     {
         $sistolik  = $record->tekanan_darah_sistolik ?? 0;
         $diastolik = $record->tekanan_darah_diastolik ?? 0;
         $lila      = $record->lila ?? 0;
         $hb        = $record->hb ?? 0;
-        $tinggi    = $record->tinggi_badan ?? 0;
+    // $tinggi    = $record->tinggi_badan ?? 160;
 
-        // Contoh logika status
-        if ($tinggi < 145 || $hb < 11 || $sistolik >= 140 || $diastolik >= 90 || $lila < 23) {
-            return 'Tinggi';
-        }
-
-        if ($tinggi < 150 || $hb < 12 || $sistolik >= 130 || $diastolik >= 85 || $lila < 25) {
-            return 'Sedang';
-        }
-
-        return 'Rendah';
+    // Status Tinggi jika salah satu kritis
+    if ($hb < 11 || $sistolik >= 140 || $diastolik >= 90 || $lila < 23) {
+        return 'Tinggi';
     }
 
-    private function getBadgeColor($status)
+    // Status Sedang jika ada peringatan ringan
+    if ($hb < 12 || $sistolik >= 130 || $diastolik >= 85 || $lila < 25) {
+        return 'Sedang';
+    }
+
+    // Normal / Rendah
+    return 'Rendah';
+    }
+
+    public function getBadgeColor($status)
     {
         return match ($status) {
             'Tinggi' => 'danger',
