@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\MonitoringController;
+use App\Http\Controllers\PregnancyLogController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -35,9 +36,8 @@ Route::prefix('ibu-hamil')
             return view('ibu_hamil.mrj');
         })->name('mrj');
 
-        Route::get('/pregnancy-log', function () {
-            return view('ibu_hamil.log');
-        })->name('log');
+        Route::get('/pregnancy-log', [PregnancyLogController::class, 'index'])->name('log');
+        Route::post('/pregnancy-log', [PregnancyLogController::class, 'store'])->name('log.store');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
     });

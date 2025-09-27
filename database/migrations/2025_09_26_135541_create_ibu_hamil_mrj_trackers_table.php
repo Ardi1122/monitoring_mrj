@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ibu_hamil_mrj_trackers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ibu_id')->constrained('users')->onDelete('cascade'); // user role = ibu hamil
+            $table->foreignId('ibu_hamil_id')->constrained('users')->onDelete('cascade'); // user role = ibu hamil
             $table->foreignId('mrj_tracker_id')->constrained('mrj_trackers')->onDelete('cascade'); // stok kader
             $table->date('tanggal');
             $table->integer('target_harian')->default(1);
