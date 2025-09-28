@@ -6,6 +6,7 @@ use App\Models\Reminder;
 use App\Models\Monitoring;
 use App\Models\MrjTracker;
 use Illuminate\Http\Request;
+use App\Models\IbuHamilMrjTracker;
 use Illuminate\Support\Facades\Auth;
 
 class MonitoringController extends Controller
@@ -35,9 +36,18 @@ class MonitoringController extends Controller
 
         $status = $monitoring ? $this->getStatusKehamilan($monitoring) : null;
         $badgeColor = $status ? $this->getBadgeColor($status) : 'primary';
-        $stokKader = MrjTracker::first();
+        $stokKader = MrjTracker::where('stok_sisa', '>', 0)->get();
 
-        return view('ibu_hamil.dashboard', compact('user', 'monitoring', 'status', 'badgeColor', 'stokKader', 'todayReminders', 'allReminders'));
+        // Ambil catatan MRJ terakhir untuk ibu hamil
+        $lastMRJ = IbuHamilMrjTracker::where('ibu_hamil_id', $user->id)
+            ->latest('tanggal')
+            ->first();
+
+        $targetHarian = $lastMRJ ? $lastMRJ->target_harian : 0;
+        $konsumsiHarian = $lastMRJ ? $lastMRJ->konsumsi_harian : 0;
+
+
+        return view('ibu_hamil.dashboard', compact('user', 'monitoring', 'status', 'badgeColor', 'stokKader', 'todayReminders', 'allReminders', 'targetHarian', 'konsumsiHarian'));
     }
 
     public function completeReminder(Reminder $reminder)
@@ -231,22 +241,35 @@ class MonitoringController extends Controller
 
         $ibuId = Auth::id();
 
-        // ambil stok dari kader
+        // ambil stok kader
         $mrj = MrjTracker::findOrFail($request->mrj_tracker_id);
 
         if ($mrj->stok_sisa < $request->konsumsi_harian) {
             return redirect()->back()->with('error', 'Stok MRJ dari kader tidak mencukupi.');
         }
 
-        // catat konsumsi ibu hamil
-        \App\Models\IbuHamilMrjTracker::create([
-            'ibu_hamil_id'         => $ibuId,
-            'mrj_tracker_id' => $mrj->id,
-            'tanggal'        => $request->tanggal,
-            'target_harian'  => 1, // default target
-            'konsumsi_harian' => $request->konsumsi_harian,
-            'stok_sisa'      => $mrj->stok_sisa - $request->konsumsi_harian,
-        ]);
+        // cek apakah ibu sudah punya catatan konsumsi untuk tanggal ini
+        $existing = IbuHamilMrjTracker::where('ibu_hamil_id', $ibuId)
+            ->whereDate('tanggal', $request->tanggal)
+            ->first();
+
+        if ($existing) {
+            // kalau sudah ada → update konsumsi_harian
+            $existing->update([
+                'konsumsi_harian' => $existing->konsumsi_harian + $request->konsumsi_harian,
+                'stok_sisa'       => $mrj->stok_sisa - $request->konsumsi_harian,
+            ]);
+        } else {
+            // kalau belum ada → buat baru dengan target_harian sama seperti stok kader atau default
+            IbuHamilMrjTracker::create([
+                'ibu_hamil_id'     => $ibuId,
+                'mrj_tracker_id'   => $mrj->id,
+                'tanggal'          => $request->tanggal,
+                'target_harian'    => 2, // default target, bisa juga ambil dari user setting
+                'konsumsi_harian'  => $request->konsumsi_harian,
+                'stok_sisa'        => $mrj->stok_sisa - $request->konsumsi_harian,
+            ]);
+        }
 
         // update stok kader
         $mrj->decrement('stok_sisa', $request->konsumsi_harian);

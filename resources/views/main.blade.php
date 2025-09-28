@@ -55,33 +55,54 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#services">Services</a></li>
                     <li><a href="#contact">Contact</a></li>
+
+                    @if (Route::has('login'))
+                        @auth
+                            <li>
+                                <a href="{{ $dashboardUrl }}" class="d-flex align-items-center btn btn-success w-100 mt-2">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                                </a>
+                            </li>
+                        @else
+                            <li class="d-lg-none px-3">
+                                <a href="{{ route('login') }}"
+                                    class="btn btn-outline-accent d-flex align-items-center w-100 mt-2">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Log in
+                                </a>
+                            </li>
+                            @if (Route::has('register'))
+                                <li class="d-lg-none px-3">
+                                    <a href="{{ route('register') }}"
+                                        class="btn btn-accent d-flex align-items-center w-100 mt-2">
+                                        <i class="fas fa-user-plus me-1"></i> Register
+                                    </a>
+                                </li>
+                            @endif
+                        @endauth
+                    @endif
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 
-            <!-- Auth Buttons -->
-            @if (Route::has('login'))
-                <div class="auth-buttons d-flex align-items-center">
-                    @auth
-                        <a href="{{ url('/ibu-hamil/dashboard') }}" class="btn btn-accent">
-                            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+            <!-- Auth Buttons (desktop only) -->
+            <div class="auth-buttons d-none d-xl-flex align-items-center">
+                @auth
+                    <a href="{{ $dashboardUrl }}" class="btn btn-accent">
+                        <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-accent me-2">
+                        <i class="fas fa-sign-in-alt me-1"></i> Log in
+                    </a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="btn btn-accent">
+                            <i class="fas fa-user-plus me-1"></i> Register
                         </a>
-                    @else
-                        <a href="{{ route('login') }}" class="btn btn-outline-accent me-2">
-                            <i class="fas fa-sign-in-alt me-1"></i> Log in
-                        </a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="btn btn-accent">
-                                <i class="fas fa-user-plus me-1"></i> Register
-                            </a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
-
+                    @endif
+                @endauth
+            </div>
         </div>
     </header>
-
 
     <main class="main">
 
@@ -197,7 +218,22 @@
                             </p>
                             <div class="cta-buttons mt-3">
                                 @auth
-                                    <a href="{{ url('/dashboard') }}" class="btn btn-accent">
+                                    @php
+                                        $dashboardUrl = '#'; // default
+                                        switch (Auth::user()->role) {
+                                            case 'ibu_hamil':
+                                                $dashboardUrl = route('ibu_hamil.dashboard');
+                                                break;
+                                            case 'kader':
+                                                $dashboardUrl = route('kader.dashboard');
+                                                break;
+                                            case 'dosen':
+                                                $dashboardUrl = route('admin.dashboard');
+                                                break;
+                                        }
+                                    @endphp
+
+                                    <a href="{{ $dashboardUrl }}" class="btn btn-accent">
                                         <i class="fas fa-tachometer-alt me-2"></i>
                                         Buka Dashboard
                                     </a>
@@ -207,6 +243,7 @@
                                     </a>
                                 @endauth
                             </div>
+
                         </div>
                     </div>
                 </div>

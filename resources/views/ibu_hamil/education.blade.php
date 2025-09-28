@@ -110,19 +110,22 @@
             background-color: #22c55e !important;
         }
 
-       .featured-title,
-.featured-desc,
-.featured-type {
-    margin: 0 !important; /* hapus semua margin */
-    line-height: 1.2;     /* rapatkan teks */
-}
+        .featured-title,
+        .featured-desc,
+        .featured-type {
+            margin: 0 !important;
+            /* hapus semua margin */
+            line-height: 1.2;
+            /* rapatkan teks */
+        }
 
-.featured-item > * {
-    margin-bottom: 0 !important; /* pastikan semua anak elemen rapat */
-}
+        .featured-item>* {
+            margin-bottom: 0 !important;
+            /* pastikan semua anak elemen rapat */
+        }
     </style>
 
-    <div class=" py-2">
+    <div class="pb-5">
         {{-- Header Section --}}
         <div class="p-3 p-md-4 rounded-3 bg-gradient-indigo-purple text-white mb-4">
             <h1 class="h2 fw-bold mb-2">Edukasi Kehamilan</h1>
@@ -196,15 +199,15 @@
                                     <div class="flex-grow-1">
                                         <h6 class="fw-semibold text-gray-900 featured-title">{{ $edu->title }}</h6>
                                         <p class="featured-desc">{!! $edu->description !!}</p>
-                                        
+
                                         <div class="">
                                             <span
-                                            class="badge featured-type
+                                                class="badge featured-type
                             @if ($edu->type == 'video') badge-video
                             @elseif($edu->type == 'ebook') badge-ebook
                             @else badge-infographic @endif">
-                                            {{ ucfirst($edu->type) }}
-                                        </span>
+                                                {{ ucfirst($edu->type) }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

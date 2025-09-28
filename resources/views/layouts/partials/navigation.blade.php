@@ -31,12 +31,6 @@
                     </a>
                 </li>
                 <li class="nav-item px-3">
-                    <a class="nav-link {{ request()->routeIs('ibu_hamil.mrj') ? 'active' : '' }}"
-                        href="{{ route('ibu_hamil.mrj') }}">
-                        <i class="fas fa-pills me-1"></i> MRJ
-                    </a>
-                </li>
-                <li class="nav-item px-3">
                     <a class="nav-link {{ request()->routeIs('ibu_hamil.log') ? 'active' : '' }}"
                         href="{{ route('ibu_hamil.log') }}">
                         <i class="fa-regular fa-file-alt me-1"></i> Log
@@ -87,10 +81,6 @@
         <a class="text-center nav-link {{ request()->routeIs('ibu_hamil.monitoring') ? 'text-pink' : 'text-muted' }}"
             href="{{ route('ibu_hamil.monitoring') }}">
             <i class="fas fa-heartbeat"></i><br><small>Monitoring</small>
-        </a>
-        <a class="text-center nav-link {{ request()->routeIs('ibu_hamil.mrj') ? 'text-pink' : 'text-muted' }}"
-            href="{{ route('ibu_hamil.mrj') }}">
-            <i class="fas fa-pills"></i><br><small>MRJ</small>
         </a>
         <a class="text-center nav-link {{ request()->routeIs('ibu_hamil.log') ? 'text-pink' : 'text-muted' }}"
             href="{{ route('ibu_hamil.log') }}">

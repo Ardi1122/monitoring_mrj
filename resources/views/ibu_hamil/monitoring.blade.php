@@ -112,7 +112,7 @@
         }
     </style>
 
-    <div class="py-4">
+    <div class="pb-5">
         {{-- Header Section --}}
         <div class="p-4 p-md-5 rounded-3 bg-gradient-green-teal text-white mb-4">
             <h1 class="h2 fw-bold mb-2">Monitoring Kehamilan</h1>

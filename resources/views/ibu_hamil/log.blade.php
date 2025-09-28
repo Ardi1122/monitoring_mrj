@@ -1,7 +1,7 @@
 @extends('layouts.ibu_hamil')
 
 @section('content')
-    <div class="">
+    <div class="pb-5">`">
         <!-- Header -->
         <div class="log-header rounded-3 p-4 text-white mb-4">
             <h1 class="h2 fw-bold mb-2">Log Kehamilan</h1>
@@ -116,50 +116,50 @@
         </div>
 
         <!-- Log History -->
-<div class="log-history" id="logHistory">
-    @foreach($logs as $log)
-        @php
-            $symptoms = is_array($log->symptoms) ? $log->symptoms : json_decode($log->symptoms, true) ?? [];
-        @endphp
-        <div class="card border-0 shadow-lg mb-4">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start mb-4">
-                    <div>
-                        <div class="d-flex align-items-center gap-3 mb-2">
-                            <i class="fas fa-calendar text-teal"></i>
-                            <span class="fw-semibold">{{ $log->tanggal->translatedFormat('l, d F Y') }}</span>
+        <div class="log-history" id="logHistory">
+            @foreach ($logs as $log)
+                @php
+                    $symptoms = is_array($log->symptoms) ? $log->symptoms : json_decode($log->symptoms, true) ?? [];
+                @endphp
+                <div class="card border-0 shadow-lg mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div>
+                                <div class="d-flex align-items-center gap-3 mb-2">
+                                    <i class="fas fa-calendar text-teal"></i>
+                                    <span class="fw-semibold">{{ $log->tanggal->translatedFormat('l, d F Y') }}</span>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-info">{{ $log->mood }}</span>
+                            </div>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <h6 class="fw-medium mb-2 d-flex align-items-center">
+                                    <i class="fas fa-heart text-danger me-2"></i>Gejala
+                                </h6>
+                                <div class="d-flex flex-wrap gap-1">
+                                    @foreach ($symptoms as $symptom)
+                                        <span class="badge bg-light text-dark">{{ $symptom }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="fw-medium mb-2">Nafsu Makan</h6>
+                                <span class="badge bg-warning text-dark">{{ $log->appetite }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="fw-medium mb-2 d-flex align-items-center">
+                                    <i class="fas fa-comment text-primary me-2"></i>Catatan
+                                </h6>
+                                <p class="small text-muted mb-0">{{ $log->notes }}</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="text-end">
-                        <span class="badge bg-info">{{ $log->mood }}</span>
-                    </div>
                 </div>
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <h6 class="fw-medium mb-2 d-flex align-items-center">
-                            <i class="fas fa-heart text-danger me-2"></i>Gejala
-                        </h6>
-                        <div class="d-flex flex-wrap gap-1">
-                            @foreach($symptoms as $symptom)
-                                <span class="badge bg-light text-dark">{{ $symptom }}</span>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="fw-medium mb-2">Nafsu Makan</h6>
-                        <span class="badge bg-warning text-dark">{{ $log->appetite }}</span>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="fw-medium mb-2 d-flex align-items-center">
-                            <i class="fas fa-comment text-primary me-2"></i>Catatan
-                        </h6>
-                        <p class="small text-muted mb-0">{{ $log->notes }}</p>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
-    @endforeach
-</div>
 
 
         <!-- Tips -->

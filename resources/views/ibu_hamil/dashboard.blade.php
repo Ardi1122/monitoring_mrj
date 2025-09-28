@@ -1,7 +1,7 @@
 @extends('layouts.ibu_hamil')
 
 @section('content')
-    <div class="">
+    <div class="pb-5">
         <!-- Welcome Section -->
         <div class="welcome-card rounded-3 p-4 text-white mb-4">
             <div class="row align-items-center">
@@ -265,82 +265,101 @@
 
         <!-- Quick Actions -->
         <div class="card border-0">
-    <div class="card-header bg-white border-bottom">
-        <h5 class="card-title d-flex align-items-center mb-0">
-            <i class="fas fa-calendar text-primary me-2"></i>
-            Aksi Cepat
-        </h5>
-    </div>
-    <div class="card-body">
-        <div class="row g-3">
-            <div class="col-6 col-md-3">
-                <a href="{{ route('ibu_hamil.monitoring') }}"
-                   class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
-                    <i class="fas fa-chart-bar fs-4"></i>
-                    <span class="small">Catat Monitoring</span>
-                </a>
+            <div class="card-header bg-white border-bottom">
+                <h5 class="card-title d-flex align-items-center mb-0">
+                    <i class="fas fa-calendar text-primary me-2"></i>
+                    Aksi Cepat
+                </h5>
             </div>
-            <div class="col-6 col-md-3">
-                <a href="{{ route('ibu_hamil.education') }}"
-                   class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
-                    <i class="fas fa-book-open fs-4"></i>
-                    <span class="small">Pelajari Nutrisi</span>
-                </a>
-            </div>
-            <div class="col-6 col-md-3">
-                <a href="{{ route('ibu_hamil.log') }}"
-                   class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
-                    <i class="fas fa-edit fs-4"></i>
-                    <span class="small">Tulis Log</span>
-                </a>
-            </div>
-            <div class="col-6 col-md-3">
-                <a href="{{ route('profile.edit') }}"
-                   class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
-                    <i class="fas fa-user-edit fs-4"></i>
-                    <span class="small">Edit Profil</span>
-                </a>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-6 col-md-3">
+                        <a href="{{ route('ibu_hamil.monitoring') }}"
+                            class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
+                            <i class="fas fa-chart-bar fs-4"></i>
+                            <span class="small">Catat Monitoring</span>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a href="{{ route('ibu_hamil.education') }}"
+                            class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
+                            <i class="fas fa-book-open fs-4"></i>
+                            <span class="small">Pelajari Nutrisi</span>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a href="{{ route('ibu_hamil.log') }}"
+                            class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
+                            <i class="fas fa-edit fs-4"></i>
+                            <span class="small">Tulis Log</span>
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a href="{{ route('profile.edit') }}"
+                            class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
+                            <i class="fas fa-user-edit fs-4"></i>
+                            <span class="small">Edit Profil</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
     </div>
 
-    <!-- Modal untuk Input MRJ -->
+    <!-- Modal Catat Konsumsi MRJ -->
     <div class="modal fade" id="mrjModal" tabindex="-1" aria-labelledby="mrjModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-purple text-white">
-                    <h5 class="modal-title" id="mrjModalLabel">Catat Konsumsi MRJ</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('ibu_hamil.mrj.store') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="mrj_tracker_id" value="{{ $stokKader->id ?? '' }}">
+        <div class="modal-dialog">
+            <form action="{{ route('ibu_hamil.mrj.store') }}" method="POST">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="mrjModalLabel">Catat Konsumsi MRJ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Pilih MRJ Tracker -->
+                        <div class="mb-3">
+                            <label for="mrj_tracker_id" class="form-label">Pilih Stok MRJ</label>
+                            <select name="mrj_tracker_id" id="mrj_tracker_id" class="form-select" required>
+                                @foreach ($stokKader as $tracker)
+                                    <option value="{{ $tracker->id }}">
+                                        {{ $tracker->tanggal }} (Stok: {{ $tracker->stok_sisa }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
+                        <!-- Tanggal konsumsi -->
                         <div class="mb-3">
                             <label for="tanggal" class="form-label">Tanggal</label>
-                            <input type="date" class="form-control" name="tanggal" id="tanggal"
-                                value="{{ date('Y-m-d') }}" required>
+                            <input type="date" name="tanggal" id="tanggal" class="form-control"
+                                value="{{ now()->toDateString() }}" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="konsumsi_harian" class="form-label">Jumlah Dikonsumsi</label>
-                            <input type="number" class="form-control" name="konsumsi_harian" id="konsumsi_harian"
-                                min="1" max="{{ $stokKader->stok_sisa ?? 2 }}" required>
-                            <small class="text-muted">
-                                Stok tersisa: {{ $stokKader->stok_sisa ?? 0 }} sachet
-                            </small>
+                            <label for="target_harian" class="form-label">Target Harian</label>
+                            <input type="number" name="target_harian" id="target_harian" class="form-control"
+                                value="{{ $targetHarian ?? 2 }}" readonly>
                         </div>
 
-                        <button type="submit" class="btn btn-purple w-100">Simpan</button>
-                    </form>
+
+                        <!-- Jumlah konsumsi -->
+                        <div class="mb-3">
+                            <label for="konsumsi_harian" class="form-label">Jumlah Dikonsumsi</label>
+                            <input type="number" name="konsumsi_harian" id="konsumsi_harian" class="form-control"
+                                min="1" max="2" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-purple">Simpan</button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+
 
 
     <style>
