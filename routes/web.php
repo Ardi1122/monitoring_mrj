@@ -23,7 +23,8 @@ Route::prefix('ibu-hamil')
         Route::get('/dashboard', [MonitoringController::class, 'index'])->name('dashboard');
         Route::get('/education', [EducationController::class, 'index'])->name('education');
         Route::get('/monitoring', [MonitoringController::class, 'monitoring'])->name('monitoring');
-
+        Route::patch('/reminders/{reminder}/complete', [MonitoringController::class, 'completeReminder'])
+            ->name('reminders.complete');
         
         Route::post('/monitoring', [MonitoringController::class, 'store'])->name('monitoring.store');
         Route::get('/monitoring/{monitoring}/edit', [MonitoringController::class, 'edit'])->name('monitoring.edit');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reminder;
 use App\Models\Monitoring;
 use App\Models\MrjTracker;
 use Illuminate\Http\Request;
@@ -20,11 +21,37 @@ class MonitoringController extends Controller
             ->latest('tanggal')
             ->first();
 
+        // Reminder hari ini
+        $todayReminders = Reminder::where('ibu_hamil_id', $user->id)
+            ->whereDate('tanggal', today())
+            ->orderBy('tanggal', 'asc')
+            ->limit(3)
+            ->get();
+
+        // Semua reminder untuk modal
+        $allReminders = Reminder::where('ibu_hamil_id', $user->id)
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
         $status = $monitoring ? $this->getStatusKehamilan($monitoring) : null;
         $badgeColor = $status ? $this->getBadgeColor($status) : 'primary';
         $stokKader = MrjTracker::first();
 
-        return view('ibu_hamil.dashboard', compact('user', 'monitoring', 'status', 'badgeColor', 'stokKader'));
+        return view('ibu_hamil.dashboard', compact('user', 'monitoring', 'status', 'badgeColor', 'stokKader', 'todayReminders', 'allReminders'));
+    }
+
+    public function completeReminder(Reminder $reminder)
+    {
+        // pastikan hanya ibu hamil pemilik reminder yg bisa update
+        if ($reminder->ibu_hamil_id !== Auth::user()->id) {
+            abort(403, 'Unauthorized');
+        }
+
+        $reminder->update([
+            'status' => 'done',
+        ]);
+
+        return redirect()->back()->with('success', 'Reminder berhasil ditandai selesai.');
     }
 
     public function monitoring()
@@ -168,20 +195,20 @@ class MonitoringController extends Controller
         $diastolik = $record->tekanan_darah_diastolik ?? 0;
         $lila      = $record->lila ?? 0;
         $hb        = $record->hb ?? 0;
-    // $tinggi    = $record->tinggi_badan ?? 160;
+        // $tinggi    = $record->tinggi_badan ?? 160;
 
-    // Status Tinggi jika salah satu kritis
-    if ($hb < 11 || $sistolik >= 140 || $diastolik >= 90 || $lila < 23) {
-        return 'Tinggi';
-    }
+        // Status Tinggi jika salah satu kritis
+        if ($hb < 11 || $sistolik >= 140 || $diastolik >= 90 || $lila < 23) {
+            return 'Tinggi';
+        }
 
-    // Status Sedang jika ada peringatan ringan
-    if ($hb < 12 || $sistolik >= 130 || $diastolik >= 85 || $lila < 25) {
-        return 'Sedang';
-    }
+        // Status Sedang jika ada peringatan ringan
+        if ($hb < 12 || $sistolik >= 130 || $diastolik >= 85 || $lila < 25) {
+            return 'Sedang';
+        }
 
-    // Normal / Rendah
-    return 'Rendah';
+        // Normal / Rendah
+        return 'Rendah';
     }
 
     public function getBadgeColor($status)

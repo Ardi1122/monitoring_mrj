@@ -110,99 +110,205 @@
             </div>
         </div>
 
-        <!-- MRJ Progress -->
-        <div class="col-md-6">
-            <div class="card border-0 h-100">
-                <div class="card-header bg-white border-bottom">
-                    <h5 class="card-title d-flex align-items-center mb-0">
-                        <i class="fas fa-chart-line text-purple me-2"></i>
-                        Konsumsi MRJ Hari Ini
-                    </h5>
+        <div class="row g-4 mb-4">
+            <!-- MRJ Progress -->
+            <div class="col-md-6">
+                <div class="card border-0 h-100">
+                    <div class="card-header bg-white border-bottom">
+                        <h5 class="card-title d-flex align-items-center mb-0">
+                            <i class="fas fa-chart-line text-purple me-2"></i>
+                            Konsumsi MRJ Hari Ini
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <span class="text-muted">Target Harian</span>
+                            </div>
+                            <div class="col-6 text-end">
+                                <span class="fw-semibold">{{ $targetHarian ?? 2 }} sachet</span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <span class="text-muted">Sudah Dikonsumsi</span>
+                            </div>
+                            <div class="col-6 text-end">
+                                <span class="fw-semibold text-success">{{ $konsumsiHarian ?? 0 }} sachet</span>
+                            </div>
+                        </div>
+                        <div class="progress mb-3" style="height: 12px;">
+                            @php
+                                $persen =
+                                    isset($targetHarian) && $targetHarian > 0
+                                        ? ($konsumsiHarian / $targetHarian) * 100
+                                        : 0;
+                            @endphp
+                            <div class="progress-bar bg-purple" role="progressbar" style="width: {{ $persen }}%"
+                                aria-valuenow="{{ $persen }}" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <p class="small text-muted mb-3">
+                                Sisa: {{ max(($targetHarian ?? 2) - ($konsumsiHarian ?? 0), 0) }} sachet
+                            </p>
+                            <button type="button" class="btn btn-purple" data-bs-toggle="modal" data-bs-target="#mrjModal">
+                                <i class="fas fa-plus me-1"></i>
+                                Catat Konsumsi MRJ
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <span class="text-muted">Target Harian</span>
-                        </div>
-                        <div class="col-6 text-end">
-                            <span class="fw-semibold">{{ $targetHarian ?? 2 }} sachet</span>
-                        </div>
+            </div>
+
+            <!-- Reminders -->
+            <div class="col-md-6">
+                <div class="card border-0 h-100">
+                    <div class="card-header bg-white border-bottom">
+                        <h5 class="card-title d-flex align-items-center mb-0">
+                            <i class="fas fa-bell text-warning me-2"></i>
+                            Pengingat Hari Ini
+                        </h5>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <span class="text-muted">Sudah Dikonsumsi</span>
-                        </div>
-                        <div class="col-6 text-end">
-                            <span class="fw-semibold text-success">{{ $konsumsiHarian ?? 0 }} sachet</span>
-                        </div>
-                    </div>
-                    <div class="progress mb-3" style="height: 12px;">
-                        @php
-                            $persen =
-                                isset($targetHarian) && $targetHarian > 0 ? ($konsumsiHarian / $targetHarian) * 100 : 0;
-                        @endphp
-                        <div class="progress-bar bg-purple" role="progressbar" style="width: {{ $persen }}%"
-                            aria-valuenow="{{ $persen }}" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <p class="small text-muted mb-3">
-                            Sisa: {{ max(($targetHarian ?? 2) - ($konsumsiHarian ?? 0), 0) }} sachet
-                        </p>
-                        <button type="button" class="btn btn-purple" data-bs-toggle="modal" data-bs-target="#mrjModal">
-                            <i class="fas fa-plus me-1"></i>
-                            Catat Konsumsi MRJ
+                    <div class="card-body">
+                        @forelse($todayReminders as $reminder)
+                            <div class="reminder-item rounded-3 p-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="fw-medium mb-1 small">{{ $reminder->judul }}</p>
+                                        <p class="text-muted mb-0" style="font-size: 0.75rem;">
+                                            {{ \Carbon\Carbon::parse($reminder->tanggal)->translatedFormat('H:i') }} WITA
+                                        </p>
+                                    </div>
+                                    @if ($reminder->status === 'pending')
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                            <form action="{{ route('ibu_hamil.reminders.complete', $reminder->id) }}"
+                                                method="POST" class="m-0">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-sm btn-success"
+                                                    title="Tandai Selesai">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @else
+                                        <span class="badge bg-success d-flex align-items-center">
+                                            <i class="fas fa-check-circle me-1"></i> Selesai
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-muted">Belum ada pengingat hari ini.</p>
+                        @endforelse
+
+                        <!-- Tombol untuk buka modal -->
+                        <button class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal"
+                            data-bs-target="#allRemindersModal">
+                            Lihat Semua Pengingat
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Modal Semua Pengingat -->
+        <div class="modal fade" id="allRemindersModal" tabindex="-1" aria-labelledby="allRemindersModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="allRemindersModalLabel">Semua Pengingat</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            @forelse($allReminders as $reminder)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ $reminder->judul }}</strong><br>
+                                        <small class="text-muted">
+                                            {{ \Carbon\Carbon::parse($reminder->tanggal)->translatedFormat('d F Y H:i') }}
+                                        </small><br>
+                                        <span>{{ $reminder->deskripsi }}</span>
+                                    </div>
+                                    @if ($reminder->status === 'pending')
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                            <form action="{{ route('ibu_hamil.reminders.complete', $reminder->id) }}"
+                                                method="POST" class="m-0">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-sm btn-success"
+                                                    title="Tandai Selesai">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @else
+                                        <span class="badge bg-success d-flex align-items-center">
+                                            <i class="fas fa-check-circle me-1"></i> Selesai
+                                        </span>
+                                    @endif
+                                </li>
+                            @empty
+                                <li class="list-group-item text-muted">Belum ada pengingat.</li>
+                            @endforelse
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Quick Actions -->
         <div class="card border-0">
-            <div class="card-header bg-white border-bottom">
-                <h5 class="card-title d-flex align-items-center mb-0">
-                    <i class="fas fa-calendar text-primary me-2"></i>
-                    Aksi Cepat
-                </h5>
+    <div class="card-header bg-white border-bottom">
+        <h5 class="card-title d-flex align-items-center mb-0">
+            <i class="fas fa-calendar text-primary me-2"></i>
+            Aksi Cepat
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-6 col-md-3">
+                <a href="{{ route('ibu_hamil.monitoring') }}"
+                   class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
+                    <i class="fas fa-chart-bar fs-4"></i>
+                    <span class="small">Catat Monitoring</span>
+                </a>
             </div>
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-6 col-md-3">
-                        <button
-                            class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-column align-items-center justify-content-center">
-                            <i class="fas fa-chart-bar fs-4 mb-2"></i>
-                            <span class="small">Catat Monitoring</span>
-                        </button>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <button
-                            class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-column align-items-center justify-content-center">
-                            <i class="fas fa-book-open fs-4 mb-2"></i>
-                            <span class="small">Pelajari Nutrisi</span>
-                        </button>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <button
-                            class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-column align-items-center justify-content-center">
-                            <i class="fas fa-edit fs-4 mb-2"></i>
-                            <span class="small">Tulis Log</span>
-                        </button>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <button
-                            class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-column align-items-center justify-content-center">
-                            <i class="fas fa-user-edit fs-4 mb-2"></i>
-                            <span class="small">Edit Profil</span>
-                        </button>
-                    </div>
-                </div>
+            <div class="col-6 col-md-3">
+                <a href="{{ route('ibu_hamil.education') }}"
+                   class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
+                    <i class="fas fa-book-open fs-4"></i>
+                    <span class="small">Pelajari Nutrisi</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="{{ route('ibu_hamil.log') }}"
+                   class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
+                    <i class="fas fa-edit fs-4"></i>
+                    <span class="small">Tulis Log</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="{{ route('profile.edit') }}"
+                   class="btn btn-outline-secondary quick-action-btn w-100 h-100 d-flex flex-row align-items-center justify-content-center gap-2">
+                    <i class="fas fa-user-edit fs-4"></i>
+                    <span class="small">Edit Profil</span>
+                </a>
             </div>
         </div>
     </div>
+</div>
+
+    </div>
 
     <!-- Modal untuk Input MRJ -->
- <div class="modal fade" id="mrjModal" tabindex="-1" aria-labelledby="mrjModalLabel" aria-hidden="true">
+    <div class="modal fade" id="mrjModal" tabindex="-1" aria-labelledby="mrjModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-purple text-white">
