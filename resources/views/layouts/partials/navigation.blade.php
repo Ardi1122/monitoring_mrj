@@ -50,7 +50,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ route('profile.edit') }}">Edit Profile</a>
+                            <a class="dropdown-item" href="{{ route('ibu_hamil.setting') }}">My Account</a>
                         </li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
@@ -88,7 +88,10 @@
         </a>
 
         {{-- Profile icon --}}
-        <a href="#" class="text-center nav-link text-muted" data-bs-toggle="modal" data-bs-target="#profileModal">
+        <a href="#" class="text-center nav-link text-muted" data-bs-toggle="modal" data-bs-target="#profileModal"
+            {{ request()->routeIs('ibu_hamil.log') ? 'text-pink' : 'text-muted' }}
+            href="{{ route('ibu_hamil.profile') }}">
+
             <i class="fas fa-user"></i><br><small>Profile</small>
         </a>
     </div>
@@ -118,5 +121,3 @@
         </div>
     </div>
 </div>
-
-

@@ -43,9 +43,9 @@
         <div class="container d-flex align-items-center justify-content-between">
 
             <!-- Logo -->
-            <a href="index.html" class="logo d-flex align-items-center">
+            <a href="/" class="logo d-flex align-items-center">
                 <img src="{{ asset('landing_page_mrj/assets/img/logo2.png') }}" alt="Logo Ibu Hamil">
-                <h2 class="sitename ms-2">Ibu Hamil</h2>
+                <h2 class="sitename ms-2 mt-2">Ibu Hamil Care</h2>
             </a>
 
             <!-- Navigation -->
@@ -57,9 +57,25 @@
                     <li><a href="#contact">Contact</a></li>
 
                     @if (Route::has('login'))
+                        @php
+                            $dashboardUrl = '#'; // default
+                            if (Auth::check()) {
+                                switch (Auth::user()->role) {
+                                    case 'ibu_hamil':
+                                        $dashboardUrl = route('ibu_hamil.dashboard');
+                                        break;
+                                    case 'kader':
+                                        $dashboardUrl = route('kader');
+                                        break;
+                                    case 'dosen':
+                                        $dashboardUrl = route('admin');
+                                        break;
+                                }
+                            }
+                        @endphp
                         @auth
-                            <li>
-                                <a href="{{ $dashboardUrl }}" class="d-flex align-items-center btn btn-success w-100 mt-2">
+                            <li class="d-lg-none px-3">
+                                <a href="{{ $dashboardUrl }}" class="d-flex align-items-center btn btn-accent w-100 mt-2">
                                     <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                                 </a>
                             </li>

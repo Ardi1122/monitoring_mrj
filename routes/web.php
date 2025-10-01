@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -32,10 +33,7 @@ Route::prefix('ibu-hamil')
         Route::delete('/monitoring/{monitoring}', [MonitoringController::class, 'destroy'])->name('monitoring.destroy');
 
         Route::post('/mrj-tracker', [MonitoringController::class, 'storeMRJ'])->name('mrj.store');
-
-        Route::get('/mrj-tracker', function () {
-            return view('ibu_hamil.mrj');
-        })->name('mrj');
+        Route::get('/setting', [UserController::class, 'showProfile'])->name('setting');
 
         Route::get('/pregnancy-log', [PregnancyLogController::class, 'index'])->name('log');
         Route::post('/pregnancy-log', [PregnancyLogController::class, 'store'])->name('log.store');

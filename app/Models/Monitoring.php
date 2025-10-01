@@ -24,7 +24,7 @@ class Monitoring extends Model
         'paritas',
         'hb',
         'konsumsi_mrj',
-        'konsumsi_jely',
+        'konsumsi_penambah_darah',
     ];
 
     protected $casts = [
