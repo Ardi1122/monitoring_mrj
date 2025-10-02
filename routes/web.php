@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EducationController;
+use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\PregnancyLogController;
 
@@ -15,6 +16,7 @@ use App\Http\Controllers\PregnancyLogController;
 Route::get('/', function () {
     return view('main');
 });
+Route::get('/', [TestimoniController::class, 'index'])->name('main');
 
 Route::prefix('ibu-hamil')
     ->name('ibu_hamil.')
@@ -26,7 +28,7 @@ Route::prefix('ibu-hamil')
         Route::get('/monitoring', [MonitoringController::class, 'monitoring'])->name('monitoring');
         Route::patch('/reminders/{reminder}/complete', [MonitoringController::class, 'completeReminder'])
             ->name('reminders.complete');
-        
+
         Route::post('/monitoring', [MonitoringController::class, 'store'])->name('monitoring.store');
         Route::get('/monitoring/{monitoring}/edit', [MonitoringController::class, 'edit'])->name('monitoring.edit');
         Route::put('/monitoring/{monitoring}', [MonitoringController::class, 'update'])->name('monitoring.update');

@@ -137,7 +137,7 @@ class MonitoringController extends Controller
             'paritas' => 'nullable|string',
             'hb' => 'required|numeric',
             'konsumsi_mrj' => 'boolean',
-            'konsumsi_jely' => 'boolean',
+            'konsumsi_penambah_darah' => 'boolean',
         ]);
 
         $data['ibu_hamil_id'] = Auth::id();
@@ -179,7 +179,7 @@ class MonitoringController extends Controller
             'paritas' => 'nullable|string',
             'hb' => 'required|numeric',
             'konsumsi_mrj' => 'boolean',
-            'konsumsi_jely' => 'boolean',
+            'konsumsi_penambah_darah' => 'boolean',
         ]);
 
         $monitoring->update($data);

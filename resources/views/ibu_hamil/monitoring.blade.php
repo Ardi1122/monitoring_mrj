@@ -233,7 +233,6 @@
                 <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
                     <i class="bi bi-plus-lg me-2"></i>Tambah Data
                 </button>
-
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -242,10 +241,12 @@
                             <tr>
                                 <th class="py-3">Tanggal</th>
                                 <th class="py-3">Minggu</th>
+                                <th class="py-3">TB (cm)</th>
                                 <th class="py-3">BB (kg)</th>
                                 <th class="py-3">LILA (cm)</th>
                                 <th class="py-3">HB (g/dL)</th>
                                 <th class="py-3">Tekanan Darah</th>
+                                <th class="py-3">Konsumsi MRJ</th>
                                 <th class="py-3">Status</th>
                                 <th class="py-3">Aksi</th>
                             </tr>
@@ -255,6 +256,7 @@
                                 <tr>
                                     <td class="py-3">{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
                                     <td class="py-3">{{ $item->usia_kehamilan }}</td>
+                                    <td class="py-3 fw-medium">{{ $item->tinggi_badan ?? '-' }}</td>
                                     <td class="py-3 fw-medium">{{ $item->berat_badan }}</td>
                                     <td class="py-3 fw-medium">{{ $item->lila }}</td>
                                     <td class="py-3 fw-medium">{{ $item->hb }}</td>
@@ -263,6 +265,13 @@
                                             {{ $item->tekanan_darah_sistolik }}/{{ $item->tekanan_darah_diastolik }} mmHg
                                         @else
                                             -
+                                        @endif
+                                    </td>
+                                    <td class="py-3">
+                                        @if ($item->konsumsi_mrj)
+                                            ✅ Ya
+                                        @else
+                                            ❌ Tidak
                                         @endif
                                     </td>
                                     <td class="py-3">
@@ -316,6 +325,12 @@
                                                                 class="form-control" value="{{ $item->usia_kehamilan }}"
                                                                 required>
                                                         </div>
+
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Tinggi Badan (cm)</label>
+                                                            <input type="number" step="0.1" name="tinggi_badan"
+                                                                class="form-control" value="{{ $item->tinggi_badan }}">
+                                                        </div>
                                                         <div class="col-md-4">
                                                             <label class="form-label">Berat Badan (kg)</label>
                                                             <input type="number" step="0.1" name="berat_badan"
@@ -328,23 +343,65 @@
                                                                 class="form-control" value="{{ $item->lila }}"
                                                                 required>
                                                         </div>
+
                                                         <div class="col-md-4">
                                                             <label class="form-label">Hemoglobin (g/dL)</label>
                                                             <input type="number" step="0.1" name="hb"
                                                                 class="form-control" value="{{ $item->hb }}"
                                                                 required>
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <label class="form-label">Tekanan Darah (Sistolik)</label>
                                                             <input type="number" name="tekanan_darah_sistolik"
                                                                 class="form-control"
                                                                 value="{{ $item->tekanan_darah_sistolik }}">
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-4">
                                                             <label class="form-label">Tekanan Darah (Diastolik)</label>
                                                             <input type="number" name="tekanan_darah_diastolik"
                                                                 class="form-control"
                                                                 value="{{ $item->tekanan_darah_diastolik }}">
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Nadi (x/menit)</label>
+                                                            <input type="number" name="nadi" class="form-control"
+                                                                value="{{ $item->nadi }}">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Respirasi (x/menit)</label>
+                                                            <input type="number" name="respirasi" class="form-control"
+                                                                value="{{ $item->respirasi }}">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Paritas</label>
+                                                            <input type="text" name="paritas" class="form-control"
+                                                                value="{{ $item->paritas }}">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-check mt-4">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="konsumsi_mrj" value="1"
+                                                                    id="konsumsi_mrj{{ $item->id }}"
+                                                                    {{ $item->konsumsi_mrj ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="konsumsi_mrj{{ $item->id }}">
+                                                                    Konsumsi MRJ
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-check mt-4">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    name="konsumsi_penambah_darah" value="1"
+                                                                    id="konsumsi_penambah_darah{{ $item->id }}"
+                                                                    {{ $item->konsumsi_penambah_darah ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="konsumsi_penambah_darah{{ $item->id }}">
+                                                                    Konsumsi Penambah Darah
+                                                                </label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -360,18 +417,18 @@
                                         </div>
                                     </div>
                                 </div>
+
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center py-3 text-muted">Belum ada data</td>
+                                    <td colspan="11" class="text-center py-3 text-muted">Belum ada data</td>
                                 </tr>
                             @endforelse
                         </tbody>
-
-
                     </table>
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- Modal Tambah Data -->
@@ -397,6 +454,11 @@
                                 <label class="form-label">Usia Kehamilan (minggu)</label>
                                 <input type="number" name="usia_kehamilan" class="form-control" required>
                             </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Tinggi Badan (cm)</label>
+                                <input type="number" step="0.1" name="tinggi_badan" class="form-control">
+                            </div>
                             <div class="col-md-4">
                                 <label class="form-label">Berat Badan (kg)</label>
                                 <input type="number" step="0.1" name="berat_badan" class="form-control" required>
@@ -405,20 +467,57 @@
                                 <label class="form-label">LILA (cm)</label>
                                 <input type="number" step="0.1" name="lila" class="form-control" required>
                             </div>
+
                             <div class="col-md-4">
                                 <label class="form-label">Hemoglobin (g/dL)</label>
                                 <input type="number" step="0.1" name="hb" class="form-control" required>
                             </div>
-                            <div class="col-md-6">
+
+                            <div class="col-md-4">
                                 <label class="form-label">Tekanan Darah (Sistolik)</label>
                                 <input type="number" name="tekanan_darah_sistolik" class="form-control">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Tekanan Darah (Diastolik)</label>
                                 <input type="number" name="tekanan_darah_diastolik" class="form-control">
                             </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Nadi (x/menit)</label>
+                                <input type="number" name="nadi" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Respirasi (x/menit)</label>
+                                <input type="number" name="respirasi" class="form-control">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Paritas</label>
+                                <input type="text" name="paritas" class="form-control">
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" name="konsumsi_mrj" value="1"
+                                        id="konsumsi_mrj">
+                                    <label class="form-check-label" for="konsumsi_mrj">
+                                        Konsumsi MRJ
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" name="konsumsi_penambah_darah"
+                                        value="1" id="konsumsi_penambah_darah">
+                                    <label class="form-check-label" for="konsumsi_penambah_darah">
+                                        Konsumsi Penambah Darah
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

@@ -11,6 +11,8 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class RecentPregnancyLogs extends BaseWidget
 {
     protected function getTableQuery(): \Illuminate\Database\Eloquent\Builder
+
+    
     {
         return PregnancyLog::query()
             ->with(['ibuHamil']) // pastikan relasi user() ada di model PregnancyLog

@@ -67,7 +67,7 @@ class MonitoringResource extends Resource
                 ->label('Paritas')
                 ->placeholder('G2P1A0'),
             Forms\Components\Toggle::make('konsumsi_mrj')->label('Konsumsi MRJ'),
-            Forms\Components\Toggle::make('konsumsi_jely')->label('Konsumsi Jely'),
+            Forms\Components\Toggle::make('konsumsi_penambah_darah')->label('Konsumsi Jely'),
 
         ]);
     }
@@ -125,9 +125,9 @@ class MonitoringResource extends Resource
                     ->boolean()
                     ->label('MRJ?'),
 
-                Tables\Columns\IconColumn::make('konsumsi_jely')
+                Tables\Columns\IconColumn::make('konsumsi_penambah_darah')
                     ->boolean()
-                    ->label('Jely?'),
+                    ->label('Penambah Darah?'),
             ])
             ->filters([
                 Tables\Filters\Filter::make('tanggal')

@@ -273,7 +273,7 @@
 
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
-                <h2>Tentang Aplikasi MRJ</h2>
+                <h2>Tentang Aplikasi Ibu Hamil Care</h2>
                 <p>Sahabat digital ibu hamil dalam memantau kesehatan kehamilan dan konsumsi Tablet Tambah Darah (MRJ).
                 </p>
             </div><!-- End Section Title -->
@@ -427,52 +427,23 @@
                     data-breakpoints='{ "320": { "slidesPerView": 1, "spaceBetween": 40 }, "1200": { "slidesPerView": 3, "spaceBetween": 20 } }'>
 
                     <div class="swiper-wrapper">
-
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <p>
-                                    <i class="bi bi-quote quote-icon-left"></i>
-                                    <span>Sejak pakai aplikasi ini, saya jadi tidak pernah lupa minum tablet tambah
-                                        darah. Jadwal pemeriksaan juga lebih teratur.</span>
-                                    <i class="bi bi-quote quote-icon-right"></i>
-                                </p>
-                                <img src="{{ asset('landing_page_mrj/assets/img/testimonials/testimonials-1.jpg') }}"
+                        @foreach ($testimonials as $testimonial)
+                            <div class="swiper-slide">
+                                <div class="testimonial-item">
+                                    <p>
+                                        <i class="bi bi-quote quote-icon-left"></i>
+                                        <span>{{ $testimonial->message }}</span>
+                                        <i class="bi bi-quote quote-icon-right"></i>
+                                    </p>
+                                    <img src="{{ asset('landing_page_mrj/assets/img/testimonials/testimonial.jpeg') }}"
                                     class="testimonial-img" alt="">
-                                <h3>Siti Aisyah</h3>
-                                <h4>Ibu Hamil</h4>
+                                    <h3>{{ $testimonial->user->name }}</h3>
+                                    <h4>{{ $testimonial->user->role ?? 'Pengguna' }}</h4>
+                                </div>
                             </div>
-                        </div><!-- End testimonial item -->
-
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <p>
-                                    <i class="bi bi-quote quote-icon-left"></i>
-                                    <span>Saya terbantu memantau ibu hamil di wilayah saya. Semua data tersimpan rapi
-                                        dan bisa saya akses kapan saja.</span>
-                                    <i class="bi bi-quote quote-icon-right"></i>
-                                </p>
-                                <img src="{{ asset('landing_page_mrj/assets/img/testimonials/testimonials-2.jpg') }}"
-                                    class="testimonial-img" alt="">
-                                <h3>Lina Putri</h3>
-                                <h4>Kader Posyandu</h4>
-                            </div>
-                        </div><!-- End testimonial item -->
-
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <p>
-                                    <i class="bi bi-quote quote-icon-left"></i>
-                                    <span>Dari sisi akademik, aplikasi ini membantu kami mendapatkan data real-time yang
-                                        bisa dianalisis untuk penelitian.</span>
-                                    <i class="bi bi-quote quote-icon-right"></i>
-                                </p>
-                                <img src="{{ asset('landing_page_mrj/assets/img/testimonials/testimonials-3.jpg') }}"
-                                    class="testimonial-img" alt="">
-                                <h3>Dr. Ahmad</h3>
-                                <h4>Dosen Kesehatan</h4>
-                            </div>
-                        </div><!-- End testimonial item -->
+                        @endforeach
                     </div>
+
                     <div class="swiper-pagination"></div>
                 </div>
             </div>
@@ -581,7 +552,7 @@
                 <!-- Tentang Aplikasi -->
                 <div class="col-lg-4 col-md-6 footer-about">
                     <a href="/" class="logo d-flex align-items-center">
-                        <span class="sitename">MRJ App</span>
+                        <span class="sitename">Ibu Hamil Care App</span>
                     </a>
                     <div class="footer-contact pt-3">
                         <p>Puskesmas Wara Selatan</p>

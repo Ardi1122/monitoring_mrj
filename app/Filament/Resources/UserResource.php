@@ -20,6 +20,9 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    protected static ?string $navigationGroup = 'Pengguna';
+    protected static ?int $navigationSort = 4;
+
 
 
     public static function form(Form $form): Form
