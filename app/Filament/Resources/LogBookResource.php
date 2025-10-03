@@ -25,12 +25,34 @@ class LogBookResource extends Resource
         return $form->schema([
             Forms\Components\Select::make('pengelola_id')
                 ->label('Pengelola (Kader)')
-                ->relationship('pengelola', 'name')
+                ->relationship(
+                    name: 'pengelola',
+                    titleAttribute: 'name',
+                    modifyQueryUsing: fn($query, $search) => $query
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhereHas(
+                            'identitas',
+                            fn($q) =>
+                            $q->where('nik', 'like', "%{$search}%")
+                        )
+                )
+                ->getOptionLabelFromRecordUsing(fn($record) => $record->nik_nama)
                 ->required(),
 
             Forms\Components\Select::make('ibu_hamil_id')
                 ->label('Ibu Hamil')
-                ->relationship('ibuHamil', 'name')
+                ->relationship(
+                    name: 'ibuHamil',
+                    titleAttribute: 'name',
+                    modifyQueryUsing: fn($query, $search) => $query
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhereHas(
+                            'identitas',
+                            fn($q) =>
+                            $q->where('nik', 'like', "%{$search}%")
+                        )
+                )
+                ->getOptionLabelFromRecordUsing(fn($record) => $record->nik_nama)
                 ->required(),
 
             Forms\Components\DatePicker::make('tanggal')
@@ -52,8 +74,35 @@ class LogBookResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('pengelola.name')->label('Pengelola'),
-                Tables\Columns\TextColumn::make('ibuHamil.name')->label('Ibu Hamil'),
+                Tables\Columns\TextColumn::make('pengelola.nik_nama')
+                    ->label('Pengelola')
+                    ->sortable()
+                    ->searchable(query: function ($query, $search) {
+                        $query->whereHas('pengelola', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%")
+                                ->orWhereHas(
+                                    'identitas',
+                                    fn($qq) =>
+                                    $qq->where('nik', 'like', "%{$search}%")
+                                );
+                        });
+                    }),
+
+
+                Tables\Columns\TextColumn::make('ibuHamil.nik_nama')
+                    ->label('Ibu Hamil')
+                    ->sortable()
+                    ->searchable(query: function ($query, $search) {
+                        $query->whereHas('ibuHamil', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%")
+                                ->orWhereHas(
+                                    'identitas',
+                                    fn($qq) =>
+                                    $qq->where('nik', 'like', "%{$search}%")
+                                );
+                        });
+                    }),
+                    
                 Tables\Columns\TextColumn::make('tanggal')->date(),
                 Tables\Columns\TextColumn::make('topik'),
             ])

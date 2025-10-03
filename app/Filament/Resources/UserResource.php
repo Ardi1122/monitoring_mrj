@@ -57,7 +57,15 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('nik_nama') 
+                ->label('Nama')
+                ->sortable()
+                ->searchable(query: function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhereHas('identitas', fn ($q) =>
+                            $q->where('nik', 'like', "%{$search}%")
+                        );
+                }),
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('role')
                     ->badge()

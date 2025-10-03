@@ -37,7 +37,8 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown px-3">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                    <a class="nav-link dropdown-toggle" href="#"
+                    id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-regular fa-user me-1"></i> {{ Auth::user()->name }}
                     </a>
@@ -50,7 +51,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ route('ibu_hamil.setting') }}">My Account</a>
+                            <a class="dropdown-item" {{ request()->routeIs('ibu_hamil.setting') ? 'active' : '' }} href="{{ route('ibu_hamil.setting') }}">My Account</a>
                         </li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
@@ -110,6 +111,9 @@
                     <strong>{{ Auth::user()->name }}</strong>
                 </div>
                 <div class="mb-3 text-muted small">{{ Auth::user()->email }}</div>
+                <div class="mb-3">
+                    <a class="btn" href="{{ route('ibu_hamil.setting') }}">My Account</a>
+                </div>
                 <div class="d-grid gap-2">
                     <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-sm">Edit Profile</a>
                     <form method="POST" action="{{ route('logout') }}">

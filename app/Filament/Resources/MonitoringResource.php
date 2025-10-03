@@ -25,14 +25,36 @@ class MonitoringResource extends Resource
         return $form->schema([
             // Pilih pengelola (kader posyandu)
             Forms\Components\Select::make('pengelola_id')
-                ->relationship('pengelola', 'name')
+                ->relationship(
+                    name: 'pengelola',
+                    titleAttribute: 'name',
+                    modifyQueryUsing: fn($query, $search) => $query
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhereHas(
+                            'identitas',
+                            fn($q) =>
+                            $q->where('nik', 'like', "%{$search}%")
+                        )
+                )
+                ->getOptionLabelFromRecordUsing(fn($record) => $record->nik_nama)
                 ->label('Pengelola')
                 ->searchable()
                 ->required(),
 
             // Pilih ibu hamil
             Forms\Components\Select::make('ibu_hamil_id')
-                ->relationship('ibuHamil', 'name')
+                ->relationship(
+                    name: 'ibuHamil',
+                    titleAttribute: 'name',
+                    modifyQueryUsing: fn($query, $search) => $query
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhereHas(
+                            'identitas',
+                            fn($q) =>
+                            $q->where('nik', 'like', "%{$search}%")
+                        )
+                )
+                ->getOptionLabelFromRecordUsing(fn($record) => $record->nik_nama)
                 ->label('Ibu Hamil')
                 ->searchable()
                 ->required(),
@@ -66,8 +88,8 @@ class MonitoringResource extends Resource
             Forms\Components\TextInput::make('paritas')
                 ->label('Paritas')
                 ->placeholder('G2P1A0'),
-            Forms\Components\Toggle::make('konsumsi_mrj')->label('Konsumsi MRJ'),
-            Forms\Components\Toggle::make('konsumsi_penambah_darah')->label('Konsumsi Jely'),
+            Forms\Components\Toggle::make('konsumsi_mrj')->label('Konsumsi MRJ?'),
+            Forms\Components\Toggle::make('konsumsi_penambah_darah')->label('Konsumsi Tablet Tambah Darah?'),
 
         ]);
     }
@@ -77,15 +99,35 @@ class MonitoringResource extends Resource
     {
         return
             $table->columns([
-                Tables\Columns\TextColumn::make('pengelola.name')
+                Tables\Columns\TextColumn::make('pengelola.nik_nama')
                     ->label('Pengelola')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable(query: function ($query, $search) {
+                        $query->whereHas('pengelola', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%")
+                                ->orWhereHas(
+                                    'identitas',
+                                    fn($qq) =>
+                                    $qq->where('nik', 'like', "%{$search}%")
+                                );
+                        });
+                    }),
 
-                Tables\Columns\TextColumn::make('ibuHamil.name')
+
+                Tables\Columns\TextColumn::make('ibuHamil.nik_nama')
                     ->label('Ibu Hamil')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable(query: function ($query, $search) {
+                        $query->whereHas('ibuHamil', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%")
+                                ->orWhereHas(
+                                    'identitas',
+                                    fn($qq) =>
+                                    $qq->where('nik', 'like', "%{$search}%")
+                                );
+                        });
+                    }),
+
 
                 Tables\Columns\TextColumn::make('tanggal')
                     ->date()
@@ -101,23 +143,6 @@ class MonitoringResource extends Resource
                 Tables\Columns\TextColumn::make('berat_badan')
                     ->label('BB (kg)'),
 
-                Tables\Columns\TextColumn::make('tinggi_badan')
-                    ->label('TB (cm)'),
-
-                Tables\Columns\TextColumn::make('tekanan_darah_sistolik')
-                    ->label('TD Sistolik (mmHg)'),
-                Tables\Columns\TextColumn::make('tekanan_darah_diastolik')
-                    ->label('TD Diastolik (mmHg)'),
-
-                Tables\Columns\TextColumn::make('nadi')
-                    ->label('Nadi (/menit)'),
-
-                Tables\Columns\TextColumn::make('respirasi')
-                    ->label('Respirasi (/menit)'),
-
-                Tables\Columns\TextColumn::make('paritas')
-                    ->label('Paritas'),
-
                 Tables\Columns\TextColumn::make('hb')
                     ->label('HB (g/dL)'),
 
@@ -127,7 +152,7 @@ class MonitoringResource extends Resource
 
                 Tables\Columns\IconColumn::make('konsumsi_penambah_darah')
                     ->boolean()
-                    ->label('Penambah Darah?'),
+                    ->label('Tablet Tambah Darah?'),
             ])
             ->filters([
                 Tables\Filters\Filter::make('tanggal')
@@ -142,7 +167,7 @@ class MonitoringResource extends Resource
                     }),
             ])
             ->defaultSort('tanggal', 'desc')
-            
+
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

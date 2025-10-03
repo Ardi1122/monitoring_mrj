@@ -25,8 +25,20 @@ class MrjTrackerResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('kader_id')
-                ->relationship('kader', 'name')
+                ->relationship(
+                    name: 'kader',
+                    titleAttribute: 'name',
+                    modifyQueryUsing: fn($query, $search) => $query
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhereHas(
+                            'identitas',
+                            fn($q) =>
+                            $q->where('nik', 'like', "%{$search}%")
+                        )
+                )
+                ->getOptionLabelFromRecordUsing(fn($record) => $record->nik_nama)
                 ->label('Kader')
+                ->searchable()
                 ->required(),
 
             Forms\Components\DatePicker::make('tanggal')
@@ -50,7 +62,19 @@ class MrjTrackerResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('kader.name')->label('Kader'),
+                Tables\Columns\TextColumn::make('kader.nik_nama')
+                    ->label('Kader')
+                    ->sortable()
+                    ->searchable(query: function ($query, $search) {
+                        $query->whereHas('kader', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%")
+                                ->orWhereHas(
+                                    'identitas',
+                                    fn($qq) =>
+                                    $qq->where('nik', 'like', "%{$search}%")
+                                );
+                        });
+                    }),
                 Tables\Columns\TextColumn::make('tanggal')->date(),
                 Tables\Columns\TextColumn::make('jumlah_produksi'),
                 Tables\Columns\TextColumn::make('jumlah_distribusi'),

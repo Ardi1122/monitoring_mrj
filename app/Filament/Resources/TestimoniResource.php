@@ -28,10 +28,25 @@ class TestimoniResource extends Resource
             ->schema([
                 Forms\Components\Select::make('user_id')
                 ->label('Pengguna')
-                ->relationship('user', 'name')
+                ->relationship(
+                    name: 'user',
+                    titleAttribute: 'name',
+                    modifyQueryUsing: fn($query, $search) => $query
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhereHas(
+                            'identitas',
+                            fn($q) =>
+                            $q->where('nik', 'like', "%{$search}%")
+                        )
+                )
+                ->getOptionLabelFromRecordUsing(fn($record) => $record->nik_nama)
                 ->searchable()
+                ->columnSpan('2')
                 ->required(),
-                Forms\Components\Textarea::make('message')->required(),
+                Forms\Components\Textarea::make('message')
+                ->columnSpan('2')
+                ->rows(4)
+                ->required(),
             ]);
     }
 

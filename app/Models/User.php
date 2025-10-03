@@ -43,8 +43,14 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function testimonials()
-{
-    return $this->hasMany(Testimonial::class);
-}
+    {
+        return $this->hasMany(Testimonial::class);
+    }
 
+    public function getNikNamaAttribute()
+    {
+        return $this->identitas
+            ? "{$this->identitas->nik} - {$this->name}"
+            : $this->name;
+    }
 }

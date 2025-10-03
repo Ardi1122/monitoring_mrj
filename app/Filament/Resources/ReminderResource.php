@@ -18,7 +18,7 @@ class ReminderResource extends Resource
 {
     protected static ?string $model = Reminder::class;
     protected static ?string $navigationIcon = 'heroicon-o-bell';
-    Protected static ?string $navigationGroup = 'Manajemen';
+    protected static ?string $navigationGroup = 'Manajemen';
     protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
@@ -26,32 +26,43 @@ class ReminderResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('ibu_hamil_id')
-                ->relationship('ibuHamil', 'name')
-                ->label('Ibu Hamil')
-                ->required(),
+                    ->relationship(
+                        name: 'ibuHamil',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn($query, $search) => $query
+                            ->where('name', 'like', "%{$search}%")
+                            ->orWhereHas(
+                                'identitas',
+                                fn($q) =>
+                                $q->where('nik', 'like', "%{$search}%")
+                            )
+                    )
+                    ->getOptionLabelFromRecordUsing(fn($record) => $record->nik_nama)
+                    ->label('Ibu Hamil')
+                    ->required(),
 
-            // created_by tidak perlu ditampilkan di form, biar otomatis
-            Forms\Components\Hidden::make('created_by')
-                ->default(fn () => Auth::id()),
+                // created_by tidak perlu ditampilkan di form, biar otomatis
+                Forms\Components\Hidden::make('created_by')
+                    ->default(fn() => Auth::id()),
 
-            Forms\Components\TextInput::make('judul')
-                ->required()
-                ->maxLength(255),
+                Forms\Components\TextInput::make('judul')
+                    ->required()
+                    ->maxLength(255),
 
-            Forms\Components\Textarea::make('deskripsi')
-                ->rows(3),
+                Forms\Components\Textarea::make('deskripsi')
+                    ->rows(3),
 
-            Forms\Components\DateTimePicker::make('tanggal')
-                ->label('Tanggal Reminder')
-                ->required(),
+                Forms\Components\DateTimePicker::make('tanggal')
+                    ->label('Tanggal Reminder')
+                    ->required(),
 
-            Forms\Components\Select::make('status')
-                ->options([
-                    'pending' => 'Pending',
-                    'done'    => 'Selesai',
-                ])
-                ->default('pending')
-                ->required(),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'done'    => 'Selesai',
+                    ])
+                    ->default('pending')
+                    ->required(),
             ]);
     }
 
@@ -59,16 +70,29 @@ class ReminderResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('ibuHamil.name')->label('Ibu Hamil'),
+                Tables\Columns\TextColumn::make('ibuHamil.nik_nama')
+                    ->label('Ibu Hamil')
+                    ->sortable()
+                    ->searchable(query: function ($query, $search) {
+                        $query->whereHas('ibuHamil', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%")
+                                ->orWhereHas(
+                                    'identitas',
+                                    fn($qq) =>
+                                    $qq->where('nik', 'like', "%{$search}%")
+                                );
+                        });
+                    }),
+
                 Tables\Columns\TextColumn::make('creator.name')->label('Dibuat Oleh'),
                 Tables\Columns\TextColumn::make('judul')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('tanggal')->dateTime()->label('Tanggal Reminder'),
                 Tables\Columns\TextColumn::make('status')
-                ->badge()
-                ->colors([
-                    'warning' => 'pending',
-                    'success' => 'done',
-                ]),
+                    ->badge()
+                    ->colors([
+                        'warning' => 'pending',
+                        'success' => 'done',
+                    ]),
             ])
             ->filters([
                 //

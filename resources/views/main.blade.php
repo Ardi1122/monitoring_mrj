@@ -4,13 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Monitoring Mrj</title>
+    <title>Ibu Hamil Care</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="{{ asset('landing_page_mrj/assets/img/favicon.png') }}" rel="icon">
+    <link href="{{ asset('landing_page_mrj/assets/img/favicon.png') }}" rel="">
+    
 
     <!-- Fonts -->
     {{-- <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -274,7 +275,7 @@
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
                 <h2>Tentang Aplikasi Ibu Hamil Care</h2>
-                <p>Sahabat digital ibu hamil dalam memantau kesehatan kehamilan dan konsumsi Tablet Tambah Darah (MRJ).
+                <p>Aplikasi Ibu Hamil Care adalah pendamping digital yang membantu ibu hamil memantau kesehatan kehamilan, mencatat perkembangan, serta memberikan informasi seputar perawatan diri dan kehamilan agar ibu dan bayi tetap sehat.
                 </p>
             </div><!-- End Section Title -->
 
@@ -282,9 +283,9 @@
 
                 <div class="row gy-4">
                     <div class="col-lg-6 position-relative align-self-start" data-aos="fade-up" data-aos-delay="100">
-                        <img src="{{ asset('landing_page_mrj/assets/img/about.jpg') }}" class="img-fluid"
+                        <img src="{{ asset('landing_page_mrj/assets/img/about.jpeg') }}" class="img-fluid"
                             alt="">
-                        <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8"
+                        <a href="https://www.youtube.com/channel/UCAkfyrWkbpS0QdQ3f4FX4bg"
                             class="glightbox pulsating-play-btn"></a>
                     </div>
                     <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="200">
@@ -320,7 +321,7 @@
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
                 <h2>Layanan Kami</h2>
-                <p>Aplikasi MRJ hadir untuk mendukung kesehatan ibu hamil melalui layanan digital yang mudah digunakan.
+                <p>Aplikasi Ibu Hamil Care hadir untuk mendukung kesehatan ibu hamil melalui layanan digital yang mudah digunakan.
                 </p>
             </div><!-- End Section Title -->
 
@@ -418,7 +419,7 @@
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
                 <h2>Testimoni</h2>
-                <p>Suara mereka yang telah merasakan manfaat aplikasi MRJ</p>
+                <p>Suara mereka yang telah merasakan manfaat aplikasi Ibu Hamil Care</p>
             </div><!-- End Section Title -->
 
             <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -438,7 +439,18 @@
                                     <img src="{{ asset('landing_page_mrj/assets/img/testimonials/testimonial.jpeg') }}"
                                     class="testimonial-img" alt="">
                                     <h3>{{ $testimonial->user->name }}</h3>
-                                    <h4>{{ $testimonial->user->role ?? 'Pengguna' }}</h4>
+                                    @if ($testimonial->user->role === 'ibu_hamil')
+                                        <!-- Role Ibu Hamil -->
+                                        <h4>Ibu Hamil</h4>
+                                    @elseif ($testimonial->user->role === 'pengelola')
+                                        <!-- Role Kader -->
+                                        <h4>Kader</h4>
+                                    @elseif ($testimonial->user->role === 'dosen')
+                                        <!-- Role Dosen -->
+                                        <h4>Dosen</h4>
+                                    @else
+                                        <h4>Pengguna</h4>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
@@ -462,7 +474,7 @@
             <!-- Google Maps -->
             <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
                 <iframe style="border:0; width: 100%; height: 370px;"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d721.7367603115686!2d120.20912873259248!3d-3.026570923787669!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2d915f0480d7a9df%3A0x6479153cec82cac3!2sPuskesmas%20Wara%20Selatan!5e1!3m2!1sid!2sid!4v1758806402061!5m2!1sid!2sid"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6401.962907438566!2d120.18236205704875!3d-2.995749212016578!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2d915f09543de1e1%3A0x5fc17963f8b1ef8a!2sUniversitas%20Mega%20Buana!5e1!3m2!1sid!2sid!4v1759461408271!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                     allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div><!-- End Google Maps -->
 
@@ -476,7 +488,7 @@
                                     data-aos="fade-up" data-aos-delay="200">
                                     <i class="bi bi-geo-alt"></i>
                                     <h3>Alamat</h3>
-                                    <p>Puskesmas Wara Selatan, Palopo, Sulawesi Selatan</p>
+                                    <p>Luminda, Kec. Wara Utara, Kota Palopo, Sulawesi Selatan 91913</p>
                                 </div>
                             </div><!-- End Info Item -->
 
@@ -485,7 +497,7 @@
                                     data-aos="fade-up" data-aos-delay="300">
                                     <i class="bi bi-telephone"></i>
                                     <h3>Telepon</h3>
-                                    <p>+62 852 1234 5678</p>
+                                    <p>+62 812 4195 4395</p>
                                 </div>
                             </div><!-- End Info Item -->
 
@@ -494,7 +506,7 @@
                                     data-aos="fade-up" data-aos-delay="400">
                                     <i class="bi bi-envelope"></i>
                                     <h3>Email</h3>
-                                    <p>support@mrjapp.id</p>
+                                    <p>umegabuana.ac.id</p>
                                 </div>
                             </div><!-- End Info Item -->
 
@@ -555,14 +567,14 @@
                         <span class="sitename">Ibu Hamil Care App</span>
                     </a>
                     <div class="footer-contact pt-3">
-                        <p>Puskesmas Wara Selatan</p>
-                        <p>Palopo, Sulawesi Selatan</p>
-                        <p class="mt-3"><strong>Telepon:</strong> <span>+62 852 1234 5678</span></p>
-                        <p><strong>Email:</strong> <span>support@mrjapp.id</span></p>
+                        <p>Universitas Mega Buana Palopo</p>
+                        <p>Luminda, Kec. Wara Utara, Kota Palopo, Sulawesi Selatan 91913</p>
+                        <p class="mt-3"><strong>Telepon:</strong> <span>+62 812 4195 4395</span></p>
+                        <p><strong>Email:</strong> <span>+62 812 4195 4395</span></p>
                     </div>
                     <div class="social-links d-flex mt-4">
                         <a href="#"><i class="bi bi-facebook"></i></a>
-                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.instagram.com/umbpalopo.official/"><i class="bi bi-instagram"></i></a>
                         <a href="#"><i class="bi bi-whatsapp"></i></a>
                     </div>
                 </div>
@@ -594,7 +606,7 @@
         </div>
 
         <div class="container copyright text-center mt-4">
-            <p>© <span>2025</span> <strong class="px-1 sitename">MRJ App</strong> <span>— Semua Hak Dilindungi</span>
+            <p>© <span>2025</span> <strong class="px-1 sitename">Ibu Hamil Care App</strong> <span>— Semua Hak Dilindungi</span>
             </p>
         </div>
 

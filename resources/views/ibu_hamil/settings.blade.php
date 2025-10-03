@@ -174,7 +174,7 @@
                     <div class="card-body">
                         <div class="d-grid gap-2">
                             <!-- Dashboard -->
-                            <a href="{{ route('ibu_hamil.dashboard') }}" class="btn btn-outline-primary text-start">
+                            <a href="/" class="btn btn-outline-primary text-start">
                                 <i class="fas fa-home me-2"></i>
                                 Menuju Dashboard
                             </a>

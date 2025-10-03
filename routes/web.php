@@ -9,13 +9,7 @@ use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\PregnancyLogController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
-Route::get('/', function () {
-    return view('main');
-});
 Route::get('/', [TestimoniController::class, 'index'])->name('main');
 
 Route::prefix('ibu-hamil')
