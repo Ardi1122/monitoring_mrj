@@ -28,7 +28,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            
+            ->brandName('Admin Dashboard')
+
             // ->login()
             ->colors([
                 'primary' => Color::Amber,
@@ -42,6 +43,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+                // \App\Filament\Widgets\CustomAccountWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -57,7 +59,7 @@ class AdminPanelProvider extends PanelProvider
                 Admin::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
+                \Illuminate\Auth\Middleware\Authenticate::class,
             ]);
     }
 }

@@ -25,6 +25,7 @@ class KaderPanelProvider extends PanelProvider
         return $panel
             ->id('kader')
             ->path('kader')
+            ->brandName('Kader Dashboard')
             ->colors([
                 'primary' => Color::Green,
             ])
@@ -37,6 +38,7 @@ class KaderPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+                // \App\Filament\Widgets\CustomAccountWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -51,7 +53,8 @@ class KaderPanelProvider extends PanelProvider
                 \App\Http\Middleware\RedirectIfIbuHamil::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
+                \Illuminate\Auth\Middleware\Authenticate::class,
             ]);
+          
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.ibu_hamil')
 
 @section('content')
-    <div class="pb-5">`">
+    <div class="pb-5">
         <!-- Header -->
         <div class="log-header rounded-3 p-4 text-white mb-4">
             <h1 class="h2 fw-bold mb-2">Log Kehamilan</h1>
@@ -18,7 +18,7 @@
                     </h5>
                     <button class="btn btn-teal" id="toggleAddForm">
                         <i class="fas fa-plus me-1"></i>
-                        Tambah Log
+                        <span class="d-none d-sm-inline">Tambah Log</span>
                     </button>
                 </div>
             </div>
