@@ -37,7 +37,12 @@
                                 <div class="ms-3">
                                     <h3 class="h4 fw-bold mb-1">{{ $user->name }}</h3>
                                     <p class="text-muted mb-0">
-                                        {{ $user->identitas->tanggal_lahir ? \Carbon\Carbon::parse($user->identitas->tanggal_lahir)->age . ' tahun' : '-' }}
+                                        @if ($user->identitas && $user->identitas->tanggal_lahir)
+                                            {{ \Carbon\Carbon::parse($user->identitas->tanggal_lahir)->age }} tahun
+                                        @else
+                                            -
+                                        @endif
+                                        {{-- {{ $user->identitas->tanggal_lahir ? \Carbon\Carbon::parse($user->identitas->tanggal_lahir)->age . ' tahun' : '-' }} --}}
                                     </p>
                                 </div>
                             </div>
